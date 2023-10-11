@@ -22,3 +22,9 @@ spec:
     securityContext: #Container Security context
       allowPrivilegeEscalation: false
 ```
+## Job
+```yaml
+spec:
+ completion: n
+ praallelism: m
+```
