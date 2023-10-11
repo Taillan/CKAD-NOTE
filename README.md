@@ -28,6 +28,14 @@ spec:
 kubectl create job mynewjob --image=busybox --dry-run=client -o yaml -- sleep 5 > mynewJob.yaml
 ```
 
+```
+
+kind: Job
+spec:
+  parallelism: 1
+  completions: 3
+```
+
 ```yaml
 apiVersion: batch/v1
 kind: Job
