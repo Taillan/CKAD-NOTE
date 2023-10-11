@@ -23,8 +23,31 @@ spec:
       allowPrivilegeEscalation: false
 ```
 ## Job
+
+```bash
+kubectl create job mynewjob --image=busybox --dry-run=client -o yaml -- sleep 5 > mynewJob.yaml
+```
+
 ```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  creationTimestamp: null
+  name: mynewjob
 spec:
- completion: n
- praallelism: m
+  ttlSecondsAfterFinished: 60
+  completions: 3
+  template:
+    metadata:
+      creationTimestamp: null
+    spec:
+      containers:
+      - command:
+        - sleep
+        - "5"
+        image: busybox
+        name: mynewjob
+        resources: {}
+      restartPolicy: Never
+status: {}
 ```
