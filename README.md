@@ -15,19 +15,19 @@ metadata:
   name: security-context-demo
 spec: 
   securityContext: # Pod security Context
-    runAsUser: 1000
-    runAsGroup: 3000
-    fsGroup: 2000
+    runAsUser: 1000        <---
+    runAsGroup: 3000       <---
+    fsGroup: 2000          <---
   containers:
-    securityContext: #Container Security context
-      allowPrivilegeEscalation: false
+    securityContext: #Container Security context 
+      allowPrivilegeEscalation: false    <---
 ```
 ## Job
 
 ```bash
 kubectl create job mynewjob --image=busybox --dry-run=client -o yaml -- sleep 5 > mynewJob.yaml
 ```
-
+### Parallelism/completion
 ```yaml
 kind: Job
 spec:
@@ -42,11 +42,11 @@ metadata:
   creationTimestamp: null
   name: mynewjob
 spec:
-  ttlSecondsAfterFinished: 60
-  completions: 3
+  ttlSecondsAfterFinished: 60  <---
+  completions: 3               <---
   template:
     metadata:
-      creationTimestamp: null
+      creationTimestamp: null  <---
     spec:
       containers:
       - command:
@@ -57,4 +57,40 @@ spec:
         resources: {}
       restartPolicy: Never
 status: {}
+```
+### Cronjobs
+```bash
+kubect create cronjobs runmeat --image=busybox --schedsule="*/1 * * * *" -- echo greetings drom the cluster
+```
+
+## Managing Ressources
+
+```yaml
+apiVersio: v1
+kind: Pod
+metadata:
+  name: RessourceManager
+spec:
+  containers:
+  - name: db
+    image: mysql
+    env:
+    - name: MYSQL_ROOT_PASSWORD
+      value: password"
+    ressources:          <---
+      requests:          <---
+        memory: "64Mi"   <---
+        cpu: "250m"      <---
+      limits:            <---
+        memory: "128Mi"  <---
+        cpu: "500m"      <---
+  - name: wp
+    image: wordpress
+    ressources:
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
 ```
