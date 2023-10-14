@@ -94,3 +94,43 @@ spec:
         memory: "128Mi"
         cpu: "500m"
 ```
+
+## Clean up ressource
+```bash
+kubectl delete all --all
+```
+
+## Deployeemnt
+
+Pour montré toute les ressources d'une app
+```bash
+kubectl get all --selector app=my-deployement-name
+```
+
+Pour update un paramètre tesl que l'image
+```bash
+kubectl set image deploy my-deployement-name nginx=nginx:1.17
+```
+
+## Label  key=value
+
+Create deployment and affect label
+```bash
+kubectl create deploy bluelabel --image=nginx
+kubectl create label deployment bluelabel state=demo
+```
+
+Voir les labels
+```bash
+kubectl get all --show-labels
+```
+
+Filtrer par label
+```bash
+kubectl get all --selector state=demo
+```
+
+Remove label   'key-'
+```bash
+kubectl label deployment bluelabel state-
+```
