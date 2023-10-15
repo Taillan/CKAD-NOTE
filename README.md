@@ -134,3 +134,47 @@ Remove label   'key-'
 ```bash
 kubectl label deployment bluelabel state-
 ```
+
+## Update Strategy
+Recreate : delet all and recreate (cannot run differente versions of an application like DB)
+RollingUpdate : One by one
+
+```bash
+kubectl rollout history #Pour voir l'historique d'update
+kubectl rollout histroy deployment rolling-nginx --revision=1
+kubectl rollout undo #pour rollback
+#For exemple :
+ 
+```
+
+```bash
+kubectl rollout histroy deployment rolling-nginx
+deployment.apps/rolling-nginx
+REVISION  CHANGE-CAUSE
+1         <none>
+2         <none>
+```
+
+### Spec
+- maxUnavaible
+- maxSurge 
+
+## Deployement
+
+### DaemonSet
+One pod on each node
+
+```yaml
+apiVersion: apps/v1
+kind: DaemonSet
+...
+```
+
+## Expose
+
+```bash
+kubectl expose deploy nginx --port=80 # => create an service (svc)
+kubectl get endpoints
+kubectl get svc
+kubectl edit svc nginx # Modify svc type as Nodeport for example 
+```

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: lab6
+    type: proxy
+  name: lab6
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: lab6
+  strategy:
+   type: RollingUpdate
+   rollingUpdate:
+     maxUnavailable: 2
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: lab6
+    spec:
+      containers:
+      - image: nginx:1.9
+        name: nginx
+        resources: {}
+status: {}
