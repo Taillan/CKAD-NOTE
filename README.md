@@ -178,3 +178,121 @@ kubectl get endpoints
 kubectl get svc
 kubectl edit svc nginx # Modify svc type as Nodeport for example 
 ```
+
+## Ingres
+
+Create ingress
+```bash
+                                      #refer to the port in the docker ?
+kubectl create ingress rolling-nginx --rule="/=rolling-nginx:80" --rule="/hello=newdep:8080"
+kubectl describe ingress rolling-nginx
+```
+
+## Network Policy
+
+example [ici](https://github.com/sandervanvugt/ckad/blob/master/nwpolicy-complete-example.yaml)
+
+```yml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: access-nginx
+spec:
+  podSelector:
+    matchLabels:
+      app: nginx   #--> La policy sapplique sur l'app nginx
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          access: "true" #--> le pod qui veux target devra avoir le lable access: "true"
+```
+
+# Volume
+TOUJOURS créer :
+  - PVC
+  - PV 
+## PV
+
+volume type:
+ - EmptyDir
+ - hostpath
+```yaml
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: morevol2
+spec:
+  containers:
+  - name: centos1
+    image: centos:7
+    command:
+      - sleep
+      - "3600" 
+    volumeMounts:
+      - mountPath: /centos1
+        name: test
+  - name: centos2
+    image: centos:7
+    command:
+      - sleep
+      - "3600"
+    volumeMounts:
+      - mountPath: /centos2
+        name: test
+  volumes: 
+    - name: test
+      emptyDir: {}
+```
+
+## PVC
+
+```yaml
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: nginx-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+---
+kind: Pod
+apiVersion: v1
+metadata:
+   name: nginx-pvc-pod
+spec:
+  volumes:
+    - name: site-storage
+      persistentVolumeClaim:
+        claimName: nginx-pvc
+  containers:
+    - name: pv-container
+      image: nginx
+      ports:
+        - containerPort: 80
+          name: webserver
+      volumeMounts:
+        - mountPath: "/usr/share/nginx/html"
+          name: site-storage
+```
+
+# ConfigMap
+For :
+  - En var
+  - conf file   (on peux mettre un directory dedans)
+  - command line
+
+From:
+  - --from-env-file  
+  - --frome-literal
+  - kubectl set env -- from=configmap/mycm deply/myapp
+
+```bash
+kubectl create cm mydbvars--from-en-file=myvarfile
+kubectl create deploy mydb --image=mariadb --replicas=3
+kubectl set env deploy mydb --from=configmap/mydbvars
+```
