@@ -296,3 +296,48 @@ kubectl create cm mydbvars--from-en-file=myvarfile
 kubectl create deploy mydb --image=mariadb --replicas=3
 kubectl set env deploy mydb --from=configmap/mydbvars
 ```
+
+# Secret
+
+- docker-registry
+- TLS
+- generic
+
+```bash
+kubectl create secret SECRET_TYPE #(docker-registry, TLS, generic)
+kubectl create secret tls my-tls-keys --cert=tls/my.crt --key=tls.key
+kubectl create secret generic my-generic-pwd --from-litteral=password=verysecret
+kubectl create secret generic my-ssh-key --from-file=ssh-private-key=.ssh/id_rsa
+kubectl create secret generic my-secret-file --from-file=/my/file
+```
+
+After set env as you do it with env variable 
+```bash
+kubectl set env --from=configmap/myconfigmap --prefix=MYSQL_ deployment/myapp
+
+kubectl create secret docker-registry my-docker-credentials --docker-username=unclebob --docker-password=secretpwd --docker-email=uncle@bob.org --docker-server=myregistry:5000
+```
+
+# API
+
+```bash
+kubectl proxy --port=8001&
+```
+```bash
+curl -XDELETE http://localhost/api/v1/pods/nginx # on ressource will delete pods fe 
+```
+
+# RBAC
+
+```bash
+kubectl config view #describe account logged and different information 
+```
+
+# Serviceaccount
+```bash
+kubectl create sa mysa
+kubect set sa deploy nginxapp mysa
+```
+
+# Blue Green deploymente (testnet) 
+Delete and replace exposure with ";" to execute simultany and have minimum down time
