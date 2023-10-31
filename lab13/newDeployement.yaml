@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: new-deployment
+    tesnet: canary
+  name: new-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: new-deployment
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: new-deployment
+        testnet: canary
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        resources: {}
+        volumeMounts:
+        - name: config-volume
+          mountPath: /usr/share/nginx/html
+      volumes:
+        - name: config-volume
+          configMap:
+            name: new-cm
+

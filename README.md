@@ -341,3 +341,93 @@ kubect set sa deploy nginxapp mysa
 
 # Blue Green deploymente (testnet) 
 Delete and replace exposure with ";" to execute simultany and have minimum down time
+
+# Canary 
+Test update on one pod to test. 
+if error => go back
+if ok : deploy on all
+
+exemple :
+```
+                  =>    old |  replicas = go down to 0   |  type=canary  
+    SVC 
+  Type = canary
+                  =>    new |  replicas = go up to       |  type=canary
+                            |         old replias number | 
+```
+``` bash
+kubectl scale deploy new-nginx --replicas=3 #to change replicas number
+kubectl scale deploy old-nginx --replicas=0 #to change replicas number
+```
+
+# Custom Ressources Definition
+
+exemple of backup 
+permite to create a perssonal ressources doesnt exist in k8s
+
+```yaml
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: backups.stable.example.com
+spec:
+  group: stable.example.com
+  versions: 
+  - name: v1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              backupType:
+                type: string
+              image:
+                type: string
+              replicas:
+                type: integer
+  scope: Namespaced
+  names:
+    plural: backups
+    singular: backup
+    shortNames:
+     - bks
+    kind: BackUp
+```
+
+# Operator
+
+# Troubleshooting
+
+```bash
+kubectl get netpol -A # to check network policy existence```
+```
+
+Thceck les label selector dans un svc NodePort
+** /!\ Si cest  un svc clusterIP on dois se connecter au node minikube ssh **
+
+```bash
+kubectl get events #when lost and dont know what to search
+kubectl config view # pour voir la config de connexion au node
+kubectl auth can-i create pods # pour check les droits 
+```
+
+```bash
+minikube ssh
+sudo -i # go to root
+cp /etc/kubernetes/admin.conf /tmp
+scp -i $(minikube ssh-key) docker@$(minikube ip):/tmp/admin.conf  ~/.kube/config
+```
+
+# Probes
+
+ - readinessProbe
+ - livenessProbe
+ - startupProbe
+
+ - exec
+ - httpGet
+ - tcpSocket

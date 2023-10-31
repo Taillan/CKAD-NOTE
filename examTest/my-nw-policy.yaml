@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nginx
+  name: nginx
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+    ports:
+    - containerPort: 80
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: busybox
+  name: busybox
+spec:
+  containers:
+  - args:
+    - sleep
+    - "3600"
+    image: busybox
+    name: busybox
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: test-network-policy
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      run: nginx
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              rn: busybox
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nginx
+  name: nginx
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    run: nginx
+status:
+  loadBalancer: {}

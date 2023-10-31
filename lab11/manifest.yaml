@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: nginx-lab11
+  name: nginx-lab11
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-lab11
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: nginx-lab11
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        resources: {}
+        volumeMounts:
+        - name: cm-vol
+          mountPath: "/usr/share/nginx/html"
+          readOnly: true
+      volumes:
+        - name: cm-vol
+          configMap:
+            name: cm-lab
+status: {}

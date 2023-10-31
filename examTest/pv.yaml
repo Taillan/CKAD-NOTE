@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: 1311-pv
+  namespace: ckad-1311
+spec:
+  capacity:
+    storage: 2Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: slow
+  hostPath:
+    path: /tmp
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: 1311-pvc
+  namespace: ckad-1311
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: slow
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: 1311-pod
+spec:
+  containers:
+    - name: myfrontend
+      image: nginx
+      volumeMounts:
+      - mountPath: "/webdata"
+        name: mypd
+  volumes:
+    - name: mypd
+      persistentVolumeClaim:
+        claimName: 1311-pvc

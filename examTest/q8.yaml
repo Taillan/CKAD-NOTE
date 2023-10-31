@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: restrictginx
+  name: restrictginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: restrictginx
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: restrictginx
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        resources:
+          limits:
+            memory: "256Mi"
+          requests:
+            memory: "64Mi"

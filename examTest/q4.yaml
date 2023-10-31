@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: pod
+  name: pod
+  namespace: ckad-ns3
+spec:
+  containers:
+  - image: httpd
+    name: httpd
+    ports:
+    - containerPort: 80
+    livenessProbe:
+      exec:
+        command:
+        - ls
+        - /usr/local/apache2/htdocs
+      initialDelaySeconds: 60
+      periodSeconds: 5
+    readinessProbe:
+      exec:
+        command:
+        - ls
+        - /usr/local/apache2/htdocs
+      initialDelaySeconds: 60
+      periodSeconds: 5
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
