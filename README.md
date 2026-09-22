@@ -9,6 +9,8 @@ kubectl exec -it POD_NAME – CMD1 CMD2
 kubectl expose pod redis --port=6379 --name redis-service --dry-run=client -o yaml
 kubectl expose pod nginx --port=80 --name nginx-service --type=NodePort --dry-run=client -o yaml
 
+// List all api resources with long name , short name
+kubectl api-resources
 
 ## Security context
 kubectl explain pod.spec.securityContext
